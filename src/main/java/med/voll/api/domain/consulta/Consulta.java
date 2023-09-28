@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import med.voll.api.domain.medico.Medico;
 import med.voll.api.domain.paciente.Paciente;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Table(name = "consultas")
 @Entity(name = "Consulta")
@@ -23,16 +23,26 @@ public class Consulta {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY) // relacion con la entidad consulta
-    @JoinColumn(name = "paciente_id") // relacion con el atributo id
+    @JoinColumn(name = "medico_id") // relacion con el atributo id
     private Medico medico;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "medico_id")
+    @JoinColumn(name = "paciente_id")
     private Paciente paciente;
 
-    private LocalDate date;
+    private LocalDateTime data;
 
+    @Column(name = "motivo_cancelamiento")
+    @Enumerated(EnumType.STRING)
+    private MotivoCancelacion motivoCancelacion;
 
-
+    public Consulta(Medico medico, Paciente paciente, LocalDateTime fecha) {
+        this.medico = medico;
+        this.paciente = paciente;
+        this.data = fecha;
+    }
+    public void cancelar(MotivoCancelacion motivo) {
+        this.motivoCancelacion = motivo;
+    }
 
 }

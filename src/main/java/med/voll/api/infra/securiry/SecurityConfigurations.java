@@ -58,6 +58,8 @@ public class SecurityConfigurations {
                 .and().authorizeHttpRequests() // autorizamos los request que tengan el siguiente matchers (http, post, "/loging").
                 .requestMatchers(HttpMethod.POST,"/login")
                 .permitAll()
+                .requestMatchers("/swagger-ui.html","/v3/api-docs/**", "/swagger-ui/**") // Configuracion URL OpenApi.URL donde vamos a tener una interface de usuario similar al Postman que nos va a permitir, nos va a mostrar informaciones de los endpoints, de los parámetros, informaciones de usos y cómo el estado retornado luego de haber usado esos endpoints.
+                .permitAll()                                                                   // También vamos a tener otra URL que nos va a dar toda la información en un formato JSON, relacionada a todos los endpoint, los parámetros, los servidores existentes así como otras informaciones adicionales de nuestro proyecto.
                 .requestMatchers(HttpMethod.DELETE, "/medicos").hasRole("ADMIN") // solo el rol de admin eliminaara medicos
                 .requestMatchers(HttpMethod.DELETE, "/pacientes").hasRole("ADMIN") // solo el rol de admin eliminaara pacientess
                 .anyRequest() // despues todos los request deben ser autenticados.

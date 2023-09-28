@@ -1,6 +1,8 @@
 package med.voll.api.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import med.voll.api.domain.direccion.DatosDireccion;
 import med.voll.api.domain.medico.*;
@@ -17,6 +19,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/medicos")
+@SecurityRequirement(name = "bearer-key")
 public class MedicoController {
 
     @Autowired
@@ -29,6 +32,7 @@ public class MedicoController {
     // usamos ResponseEntity, que es un wrapper para digamos encapsular la respuesta que le
     // vamos a dar a nuestro servidor
     @PostMapping
+    @Operation(summary = "Registra un nuevo medico en la base de datos")
     public ResponseEntity <DatosRespuestaMedico> registrarMedico(@RequestBody @Valid DatosRegistroMedico datosRegistroMedico,
                                                                  UriComponentsBuilder uriComponentsBuilder){
         Medico medico = medicoRepository.save(new Medico(datosRegistroMedico));
@@ -60,6 +64,7 @@ public class MedicoController {
         //return medicoRepository.findAll(paginacion).map(DatosListadoMedico::new);
 
     @GetMapping                                              // modificar atributos para obciones de listado
+    @Operation(summary = "Obtiene el listado de medicos")
     public  ResponseEntity<Page<DatosListadoMedico>>listadomedicos(@PageableDefault(size = 4,sort= "nombre") Pageable paginacion){
         //Retornara solo Medicos activos
         return ResponseEntity.ok(medicoRepository.findByActivoTrue(paginacion).map(DatosListadoMedico::new));
@@ -70,6 +75,7 @@ public class MedicoController {
     @PutMapping
     @Transactional // perinte realizar la transaccion despues de ejecutar el método
                     // realizando un commin en la base de datos por ende actualizando la informacion.
+    @Operation(summary = "Actualiza los datos de un medico existente")
     public ResponseEntity actualizarMedico(@RequestBody @Valid DatosActualizarMedico datosActualizarMedico){
         Medico medico = medicoRepository.getReferenceById(datosActualizarMedico.id());
         medico.actualizarDatos(datosActualizarMedico);
@@ -84,6 +90,7 @@ public class MedicoController {
 
     //@DeleteMapping("/{id}")
     //@Transactional
+    //@Operation(summary = "Elimina un medico registrado")
     //public void eliminarMedicos(@PathVariable Long id){
         //Medico medico = medicoRepository.getReferenceById(id);
         //medicoRepository.delete(medico);
@@ -92,6 +99,7 @@ public class MedicoController {
     // 5.  Metodo para eliminar medicos (delete Logico)
     @DeleteMapping("/{id}")
     @Transactional
+    @Operation(summary = "inactiva un medico registrado")
     public ResponseEntity inactivarMedico(@PathVariable Long id){
         Medico medico = medicoRepository.getReferenceById(id);
         medico.desactivarMedico();
@@ -100,6 +108,7 @@ public class MedicoController {
 
     // 6. Metodo para obtener por medio de url (generado en metodo registar)
     @GetMapping("/{id}")
+    @Operation(summary = "Obtiene los registros del medico con ID")
     public ResponseEntity<DatosRespuestaMedico> retornaDatosMedico(@PathVariable Long id){
         Medico medico = medicoRepository.getReferenceById(id);
         var datosMedicos = new DatosRespuestaMedico(medico.getId(), medico.getNombre(), medico.getEmail(),

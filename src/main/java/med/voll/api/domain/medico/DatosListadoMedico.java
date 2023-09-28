@@ -1,5 +1,7 @@
 package med.voll.api.domain.medico;
 
+import med.voll.api.domain.paciente.Paciente;
+
 public record DatosListadoMedico(
 
         Long id,
@@ -18,4 +20,5 @@ public record DatosListadoMedico(
                 medico.getEmail()
         );
     }
+
 }

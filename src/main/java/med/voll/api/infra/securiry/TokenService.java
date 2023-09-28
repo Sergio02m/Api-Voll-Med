@@ -1,7 +1,6 @@
 package med.voll.api.infra.securiry;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 
@@ -57,8 +56,6 @@ public class TokenService {
         }
         return verifier.getSubject();
     }
-
-
 
     // Aca se configura el tiempo estimado de caducidad del token
     // en es esta api se configuro una validez de 2 horas.
